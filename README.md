@@ -4,11 +4,12 @@
 
 ## Проєкти
 
-- [`DockerProject/`](./DockerProject) — Dockerized Django + PostgreSQL + Nginx
+- [`lesson-4_DockerProject/`](./lesson-4_DockerProject) — Dockerized Django + PostgreSQL + Nginx
+- [`lesson-5_terraform/`](./lesson-5_terraform) — Terraform інфраструктура в AWS (S3 backend, DynamoDB lock, VPC, ECR)
 
 ---
 
-## DockerProject
+## Lesson 4 — DockerProject
 
 Мінімальний Django-проєкт, розгорнутий у Docker Compose з трьома сервісами:
 
@@ -21,7 +22,7 @@
 ### Структура
 
 ```
-DockerProject/
+lesson-4_DockerProject/
 ├── docker-compose.yml
 ├── .env                  # змінні середовища (не в git)
 ├── .env.example          # шаблон змінних
@@ -42,7 +43,7 @@ DockerProject/
 **1. Перейди в директорію проєкту:**
 
 ```bash
-cd DockerProject
+cd lesson-4_DockerProject
 ```
 
 **2. Скопіюй файл змінних середовища та за потреби відредагуй:**
@@ -88,3 +89,61 @@ docker compose down
 ```bash
 docker compose down -v
 ```
+
+---
+
+## Lesson 5 — Terraform Infrastructure
+
+Проєкт для розгортання базової AWS інфраструктури за допомогою Terraform з модульною структурою.
+
+### Що створюється
+
+- S3 бакет для Terraform state (з versioning)
+- DynamoDB таблиця для state locking
+- VPC з публічними та приватними підмережами
+- ECR репозиторій для Docker образів
+
+### Структура
+
+```text
+lesson-5_terraform/
+├── main.tf
+├── backend.tf
+├── outputs.tf
+├── modules/
+│   ├── s3-backend/
+│   ├── vpc/
+│   └── ecr/
+└── README.md
+```
+
+### Передумови
+
+- Terraform >= 1.0
+- Налаштований AWS CLI (`aws configure`)
+- Права доступу до S3, DynamoDB, VPC, ECR
+
+### Як запустити
+
+```bash
+cd lesson-5_terraform
+terraform init -reconfigure
+terraform plan
+terraform apply
+```
+
+### Корисні команди
+
+```bash
+terraform output
+terraform destroy
+```
+
+### Основні outputs
+
+- `s3_bucket_name`
+- `dynamodb_table_name`
+- `vpc_id`
+- `public_subnet_ids`
+- `private_subnet_ids`
+- `ecr_repository_url`
