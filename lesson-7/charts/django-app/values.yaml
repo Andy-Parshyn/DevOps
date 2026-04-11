@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: 634222035653.dkr.ecr.eu-central-1.amazonaws.com/lesson-7-django
+  repository: <AWS_ACCOUNT_ID>.dkr.ecr.eu-central-1.amazonaws.com/lesson-7-django
   tag: latest
   pullPolicy: Always
 
@@ -13,12 +13,14 @@ service:
 config:
   POSTGRES_DB: myproject_db
   POSTGRES_USER: myuser
-  POSTGRES_PASSWORD: mypassword
   POSTGRES_HOST: db
   POSTGRES_PORT: "5432"
-  DJANGO_SECRET_KEY: django-insecure-change-me-in-production
-  DJANGO_DEBUG: "1"
+  DJANGO_DEBUG: "0"
   DJANGO_ALLOWED_HOSTS: "*"
+
+secrets:
+  POSTGRES_PASSWORD: mypassword
+  DJANGO_SECRET_KEY: django-insecure-change-me-in-production
 
 autoscaling:
   minReplicas: 2

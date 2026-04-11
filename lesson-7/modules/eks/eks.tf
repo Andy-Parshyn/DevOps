@@ -130,4 +130,8 @@ resource "aws_eks_node_group" "main" {
   tags = {
     Name = "${var.cluster_name}-nodes"
   }
+
+  lifecycle {
+    ignore_changes = [ scaling_config[0].desired_size ]
+  }
 }
