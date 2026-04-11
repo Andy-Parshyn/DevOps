@@ -19,8 +19,8 @@ config:
   DJANGO_ALLOWED_HOSTS: "*"
 
 secrets:
-  POSTGRES_PASSWORD: mypassword
-  DJANGO_SECRET_KEY: django-insecure-change-me-in-production
+  POSTGRES_PASSWORD: ""
+  DJANGO_SECRET_KEY: ""
 
 autoscaling:
   minReplicas: 2

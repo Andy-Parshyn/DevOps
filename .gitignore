@@ -221,3 +221,4 @@ override.tf.json
 *_override.tf.json
 .terraformrc
 terraform.rc
+lesson-7/charts/django-app/value-secrets.yaml

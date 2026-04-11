@@ -26,14 +26,14 @@ spec:
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-secret
-                key: POSTGRES_PASSWORD
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: POSTGRES_PASSWORD
             - name: DJANGO_SECRET_KEY
               valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-secret
-                key: DJANGO_SECRET_KEY
+                secretKeyRef:
+                  name: {{ .Release.Name }}-secret
+                  key: DJANGO_SECRET_KEY
           resources:
             requests:
               cpu: 100m
