@@ -1,0 +1,5 @@
+apiVersion: v2
+name: django-app
+description: Django application Helm chart for lesson-7
+version: 1.0.0
+appVersion: "1.0.0"
