@@ -6,6 +6,7 @@
 
 - [`lesson-4_DockerProject/`](./lesson-4_DockerProject) — Dockerized Django + PostgreSQL + Nginx
 - [`lesson-5_terraform/`](./lesson-5_terraform) — Terraform інфраструктура в AWS (S3 backend, DynamoDB lock, VPC, ECR)
+- [`lesson-7/`](./lesson-7) — Terraform + AWS EKS + Helm chart для деплою Django в Kubernetes
 
 ---
 
@@ -147,3 +148,28 @@ terraform destroy
 - `public_subnet_ids`
 - `private_subnet_ids`
 - `ecr_repository_url`
+
+---
+
+## Lesson 7 — Terraform + EKS + Helm
+
+Розширення Terraform-проєкту для Kubernetes-розгортання Django в AWS EKS.
+
+### Що додано у Lesson 7
+
+- модуль `eks` для створення EKS кластера та node group
+- Helm chart `charts/django-app` для деплою Django, Service і HPA
+- оновлений Terraform stack із outputs для EKS endpoint та назви кластера
+- S3 backend для зберігання state (`lesson-7/terraform.tfstate`)
+
+### Основні компоненти
+
+- `modules/s3-backend` — S3 + lock-механізм
+- `modules/vpc` — мережа (публічні/приватні підмережі)
+- `modules/ecr` — ECR репозиторій для Docker image
+- `modules/eks` — EKS cluster + managed node group
+- `charts/django-app` — Helm chart (Deployment, Service, ConfigMap, HPA)
+
+### Документація
+
+Детальна інструкція для Lesson 7: [`lesson-7/README.md`](./lesson-7/README.md)
