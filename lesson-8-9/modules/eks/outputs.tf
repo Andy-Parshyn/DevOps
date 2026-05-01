@@ -17,3 +17,8 @@ output "node_group_name" {
   description = "Назва Node Group"
   value       = aws_eks_node_group.main.node_group_name
 }
+
+output "oidc_provider_arn" {
+  description = "ARN OIDC провайдера для IRSA"
+  value       = aws_iam_openid_connect_provider.eks.arn
+}
