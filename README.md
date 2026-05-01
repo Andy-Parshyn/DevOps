@@ -9,6 +9,7 @@
 - [`lesson-7/`](./lesson-7) — Terraform + AWS EKS + Helm chart для деплою Django в Kubernetes
 - [`lesson-8-9/`](./lesson-8-9) — CI/CD pipeline: Jenkins + Argo CD + Helm + Terraform на EKS
 - [`lesson-10/`](./lesson-10) — Універсальний RDS модуль: Aurora Cluster або standalone RDS instance
+- [`final-project/`](./final-project) — Фінальний проєкт: повний AWS-стек (VPC + EKS + ECR + RDS + Jenkins + Argo CD + Prometheus/Grafana) з Django-застосунком і Helm chart
 
 ---
 
@@ -242,3 +243,27 @@ Terraform-модуль для створення бази даних у AWS з �
 ### Документація
 
 Детальна інструкція для Lesson 10: [`lesson-10/README.md`](./lesson-10/README.md)
+
+---
+
+## Final Project — Повний AWS-стек з моніторингом
+
+Консолідація всіх попередніх уроків у єдину інфраструктуру з додаванням моніторингу (Prometheus + Grafana через kube-prometheus-stack).
+
+### Що додано у Final Project
+
+- модуль `monitoring` — Prometheus, Grafana, Alertmanager через Helm chart `kube-prometheus-stack`
+- винесено `aws_ebs_csi_driver.tf` як окремий файл у модулі `eks`
+- переміщено Django-застосунок у `final-project/Django/` (flat layout, з nginx)
+- оновлено Jenkinsfile (нові шляхи Dockerfile/context/values)
+- оновлено Argo CD Application path → `final-project/charts/django-app`
+
+### Структура проєкту
+
+- `modules/{s3-backend,vpc,ecr,eks,rds,jenkins,argo_cd,monitoring}` — 8 модулів
+- `charts/django-app` — Helm chart для деплою Django
+- `Django/` — джерела застосунку, Dockerfile, docker-compose.yaml, Jenkinsfile, nginx/
+
+### Документація
+
+Детальна інструкція: [`final-project/README.md`](./final-project/README.md)
