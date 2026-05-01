@@ -7,6 +7,7 @@
 - [`lesson-4_DockerProject/`](./lesson-4_DockerProject) — Dockerized Django + PostgreSQL + Nginx
 - [`lesson-5_terraform/`](./lesson-5_terraform) — Terraform інфраструктура в AWS (S3 backend, DynamoDB lock, VPC, ECR)
 - [`lesson-7/`](./lesson-7) — Terraform + AWS EKS + Helm chart для деплою Django в Kubernetes
+- [`lesson-8-9/`](./lesson-8-9) — CI/CD pipeline: Jenkins + Argo CD + Helm + Terraform на EKS
 
 ---
 
@@ -173,3 +174,39 @@ terraform destroy
 ### Документація
 
 Детальна інструкція для Lesson 7: [`lesson-7/README.md`](./lesson-7/README.md)
+
+---
+
+## Lesson 8-9 — CI/CD: Jenkins + Argo CD + Helm + Terraform
+
+Повний CI/CD-процес для Django-застосунку з використанням GitOps-підходу.
+
+### Архітектура
+
+```
+Developer push → Jenkins (Kaniko build + ECR push) → Оновлення tag у values.yaml → Git push
+                                                                                       │
+Argo CD стежить за Git → Виявляє новий tag → Автоматична синхронізація в EKS кластер ◄──┘
+```
+
+### Що додано у Lesson 8-9
+
+- модуль `jenkins` — Jenkins через Helm з Kubernetes-агентами (Kaniko + Git)
+- модуль `argo_cd` — Argo CD через Helm з автоматичною синхронізацією
+- `Jenkinsfile` — CI-pipeline (build → push ECR → update values → push to Git)
+- Helm chart `charts/django-app` — для деплою Django через Argo CD
+- EBS CSI Driver + OIDC provider для IRSA в EKS модулі
+
+### Основні компоненти
+
+- `modules/s3-backend` — S3 + DynamoDB для Terraform state
+- `modules/vpc` — VPC з публічними/приватними підмережами
+- `modules/ecr` — ECR репозиторій для Docker образів
+- `modules/eks` — EKS кластер + EBS CSI Driver + OIDC
+- `modules/jenkins` — Jenkins (Helm) з JCasC, Kaniko, RBAC
+- `modules/argo_cd` — Argo CD (Helm) + Application CRD для django-app
+- `charts/django-app` — Helm chart (Deployment, Service, ConfigMap, HPA)
+
+### Документація
+
+Детальна інструкція для Lesson 8-9: [`lesson-8-9/README.md`](./lesson-8-9/README.md)

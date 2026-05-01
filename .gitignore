@@ -222,3 +222,8 @@ override.tf.json
 .terraformrc
 terraform.rc
 lesson-7/charts/django-app/value-secrets.yaml
+
+# Lesson 8-9 додатки
+.terraform.lock.hcl
+backend.tf.bootstrap
+!*.tfvars.example

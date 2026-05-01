@@ -1,0 +1,14 @@
+# ==========================================
+# Argo CD Server
+# ==========================================
+server:
+  service:
+    type: LoadBalancer
+
+  # Вимкнути TLS для навчального середовища
+  extraArgs:
+    - --insecure
+
+configs:
+  params:
+    server.insecure: true
