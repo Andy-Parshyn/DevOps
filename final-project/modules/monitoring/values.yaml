@@ -1,0 +1,28 @@
+grafana:
+  service:
+    type: ClusterIP
+    port: 80
+  defaultDashboardsEnabled: true
+
+prometheus:
+  service:
+    type: ClusterIP
+  prometheusSpec:
+    retention: 7d
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+
+alertmanager:
+  enabled: true
+  service:
+    type: ClusterIP
+
+nodeExporter:
+  enabled: true
+kubeStateMetrics:
+  enabled: true
