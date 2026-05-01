@@ -33,9 +33,7 @@ resource "helm_release" "jenkins" {
   # Підключаємо кастомні values
   values = [
     templatefile("${path.module}/values.yaml", {
-      ecr_repository_url = var.ecr_repository_url
-      aws_region         = var.aws_region
-      namespace          = var.namespace
+      namespace = var.namespace
     })
   ]
 }

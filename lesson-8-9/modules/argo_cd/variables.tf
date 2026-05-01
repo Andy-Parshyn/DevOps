@@ -1,18 +1,3 @@
-variable "eks_cluster_name" {
-  description = "Назва EKS кластера"
-  type        = string
-}
-
-variable "eks_cluster_endpoint" {
-  description = "Endpoint EKS кластера"
-  type        = string
-}
-
-variable "eks_cluster_ca" {
-  description = "Certificate Authority (base64)"
-  type        = string
-}
-
 variable "namespace" {
   description = "Kubernetes namespace для Argo CD"
   type        = string

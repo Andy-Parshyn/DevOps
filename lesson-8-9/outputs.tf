@@ -23,8 +23,8 @@ output "eks_cluster_endpoint" {
 }
 
 # Jenkins
-output "jenkins_url" {
-  value = module.jenkins.jenkins_url
+output "jenkins_url_command" {
+  value = module.jenkins.jenkins_url_command
 }
 
 output "jenkins_admin_password" {
@@ -32,8 +32,8 @@ output "jenkins_admin_password" {
 }
 
 # Argo CD
-output "argocd_url" {
-  value = module.argo_cd.argocd_url
+output "argocd_url_command" {
+  value = module.argo_cd.argocd_url_command
 }
 
 output "argocd_admin_password" {

@@ -59,23 +59,15 @@ module "eks" {
 
 # Jenkins
 module "jenkins" {
-  source               = "./modules/jenkins"
-  eks_cluster_name     = module.eks.cluster_name
-  eks_cluster_endpoint = module.eks.cluster_endpoint
-  eks_cluster_ca       = module.eks.cluster_certificate_authority
-  ecr_repository_url   = module.ecr.ecr_repository_url
-  aws_region           = "eu-central-1"
+  source = "./modules/jenkins"
 
   depends_on = [module.eks]
 }
 
 # Argo CD
 module "argo_cd" {
-  source               = "./modules/argo_cd"
-  eks_cluster_name     = module.eks.cluster_name
-  eks_cluster_endpoint = module.eks.cluster_endpoint
-  eks_cluster_ca       = module.eks.cluster_certificate_authority
-  git_repo_url         = "https://github.com/Andy-Parshyn/DevOps.git"
+  source       = "./modules/argo_cd"
+  git_repo_url = "https://github.com/Andy-Parshyn/DevOps.git"
 
   depends_on = [module.eks]
 }

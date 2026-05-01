@@ -1,4 +1,4 @@
-output "argocd_url" {
+output "argocd_url_command" {
   description = "Команда для отримання URL Argo CD"
   value       = "kubectl get svc -n ${var.namespace} argocd-argo-cd-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
 }

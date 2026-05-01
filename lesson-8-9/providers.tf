@@ -1,10 +1,12 @@
 # Читаємо EKS кластер (data source — НЕ створює, тільки читає)
 data "aws_eks_cluster" "this" {
-  name = module.eks.cluster_name
+  name       = module.eks.cluster_name
+  depends_on = [module.eks]
 }
 
 data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_name
+  name       = module.eks.cluster_name
+  depends_on = [module.eks]
 }
 
 # Kubernetes provider — для k8s об'єктів (namespaces, RBAC)

@@ -1,7 +1,9 @@
 replicaCount: 2
 
 image:
-  repository: <AWS_ACCOUNT_ID>.dkr.ecr.eu-central-1.amazonaws.com/lesson-8-9-django
+  # Set via CI/Terraform or environment-specific values file.
+  # Example: 123456789012.dkr.ecr.eu-central-1.amazonaws.com/lesson-8-9-django
+  repository: ""
   tag: latest
   pullPolicy: Always
 

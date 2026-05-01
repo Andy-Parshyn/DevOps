@@ -27,6 +27,7 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
 }
 
 # Security Group для EKS кластера
+# УВАГА: 0.0.0.0/0 — для навчального середовища. У production обмежте до VPN/admin CIDR.
 resource "aws_security_group" "eks_cluster" {
   name        = "${var.cluster_name}-cluster-sg"
   description = "Security group for EKS cluster"
