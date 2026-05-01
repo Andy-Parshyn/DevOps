@@ -107,8 +107,8 @@ lesson-10/
 ```bash
 cd lesson-10
 terraform init
-terraform plan -var="db_password=YourSecurePassword123"
-terraform apply -var="db_password=YourSecurePassword123"
+terraform plan -var="db_password=YourSecurePassword123" -var="jenkins_admin_password=AdminPass123"
+terraform apply -var="db_password=YourSecurePassword123" -var="jenkins_admin_password=AdminPass123"
 ```
 
 ### 2. Перемикання на Aurora
@@ -147,9 +147,9 @@ kubectl run pg-client --rm -it --image=postgres:15 -- \
 | `ecr_repository_url` | URL ECR репозиторію |
 | `eks_cluster_name` | Назва EKS кластера |
 | `eks_cluster_endpoint` | Endpoint EKS кластера |
-| `jenkins_url` | Команда для отримання URL Jenkins |
+| `jenkins_url_command` | Команда для отримання URL Jenkins |
 | `jenkins_admin_password` | Команда для отримання пароля Jenkins |
-| `argocd_url` | Команда для отримання URL Argo CD |
+| `argocd_url_command` | Команда для отримання URL Argo CD |
 | `argocd_admin_password` | Команда для отримання пароля Argo CD |
 | `rds_endpoint` | Endpoint бази даних |
 | `rds_port` | Порт бази даних |
@@ -158,5 +158,5 @@ kubectl run pg-client --rm -it --image=postgres:15 -- \
 ## Знищення інфраструктури
 
 ```bash
-terraform destroy -var="db_password=YourSecurePassword123"
+terraform destroy -var="db_password=YourSecurePassword123" -var="jenkins_admin_password=AdminPass123"
 ```

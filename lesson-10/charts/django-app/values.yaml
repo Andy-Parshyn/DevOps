@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   # Set via CI/Terraform or environment-specific values file.
-  # Example: 123456789012.dkr.ecr.eu-central-1.amazonaws.com/lesson-8-9-django
+  # Example: 123456789012.dkr.ecr.eu-central-1.amazonaws.com/lesson-10-django
   repository: ""
   tag: latest
   pullPolicy: Always

@@ -41,7 +41,7 @@ controller:
                     containers:
                       # Kaniko — будує Docker образи без Docker daemon
                       - name: "kaniko"
-                        image: "gcr.io/kaniko-project/executor:debug"
+                        image: "gcr.io/kaniko-project/executor:v1.23.2-debug"
                         command: "/busybox/cat"
                         ttyEnabled: true
                         resourceRequestCpu: "500m"
@@ -50,7 +50,7 @@ controller:
                         resourceLimitMemory: "2Gi"
                       # Git — для клонування репо
                       - name: "git"
-                        image: "alpine/git:latest"
+                        image: "alpine/git:v2.47.2"
                         command: "/bin/sh"
                         args:
                           - "-c"

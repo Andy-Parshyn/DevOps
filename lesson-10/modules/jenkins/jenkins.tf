@@ -36,4 +36,9 @@ resource "helm_release" "jenkins" {
       namespace = var.namespace
     })
   ]
+
+  set_sensitive {
+    name  = "controller.admin.password"
+    value = var.jenkins_admin_password
+  }
 }

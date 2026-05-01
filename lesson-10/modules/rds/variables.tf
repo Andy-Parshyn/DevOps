@@ -10,9 +10,14 @@ variable "use_aurora" {
 }
 
 variable "engine" {
-  description = "Database engine (e.g. postgres, mysql)"
+  description = "Database engine"
   type        = string
   default     = "postgres"
+
+  validation {
+    condition     = contains(["postgres", "mysql"], var.engine)
+    error_message = "Supported engines: postgres, mysql."
+  }
 }
 
 variable "engine_version" {
@@ -76,6 +81,12 @@ variable "parameter_group_family" {
   description = "Parameter group family (e.g. postgres15, aurora-postgresql15). Auto-derived if empty."
   type        = string
   default     = ""
+}
+
+variable "db_port" {
+  description = "Database port (default: 5432 for postgres, 3306 for mysql)"
+  type        = number
+  default     = null
 }
 
 variable "skip_final_snapshot" {

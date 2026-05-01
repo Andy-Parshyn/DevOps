@@ -33,21 +33,21 @@ module "vpc" {
   public_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   private_subnets    = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
   availability_zones = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
-  vpc_name           = "lesson-8-9-vpc"
-  eks_cluster_name   = "lesson-8-9-eks"
+  vpc_name           = "lesson-10-vpc"
+  eks_cluster_name   = "lesson-10-eks"
 }
 
 # ECR
 module "ecr" {
   source       = "./modules/ecr"
-  ecr_name     = "lesson-8-9-django"
+  ecr_name     = "lesson-10-django"
   scan_on_push = true
 }
 
 # EKS
 module "eks" {
   source             = "./modules/eks"
-  cluster_name       = "lesson-8-9-eks"
+  cluster_name       = "lesson-10-eks"
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
   public_subnet_ids  = module.vpc.public_subnet_ids
@@ -60,6 +60,8 @@ module "eks" {
 # Jenkins
 module "jenkins" {
   source = "./modules/jenkins"
+
+  jenkins_admin_password = var.jenkins_admin_password
 
   depends_on = [module.eks]
 }

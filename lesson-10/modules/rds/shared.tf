@@ -1,11 +1,20 @@
 locals {
   engine_major_version = split(".", var.engine_version)[0]
 
+  default_ports = {
+    postgres = 5432
+    mysql    = 3306
+  }
+
+  db_port = var.db_port != null ? var.db_port : local.default_ports[var.engine]
+
   pg_family = var.parameter_group_family != "" ? var.parameter_group_family : (
     var.use_aurora
     ? "aurora-postgresql${local.engine_major_version}"
     : "${var.engine}${local.engine_major_version}"
   )
+
+  aurora_engine = var.engine == "postgres" ? "aurora-postgresql" : "aurora-mysql"
 }
 
 # --- Subnet Group ---
@@ -26,8 +35,8 @@ resource "aws_security_group" "this" {
 
   ingress {
     description = "Database access from VPC"
-    from_port   = 5432
-    to_port     = 5432
+    from_port   = local.db_port
+    to_port     = local.db_port
     protocol    = "tcp"
     cidr_blocks = [var.vpc_cidr_block]
   }
@@ -44,7 +53,7 @@ resource "aws_security_group" "this" {
   })
 }
 
-# --- Parameter Group ---
+# --- Parameter Group (instance-level, used by both RDS and Aurora writer) ---
 resource "aws_db_parameter_group" "this" {
   name   = "${var.identifier}-pg"
   family = local.pg_family
@@ -66,5 +75,22 @@ resource "aws_db_parameter_group" "this" {
 
   tags = merge(var.tags, {
     Name = "${var.identifier}-parameter-group"
+  })
+}
+
+# --- Cluster Parameter Group (Aurora only) ---
+resource "aws_rds_cluster_parameter_group" "this" {
+  count = var.use_aurora ? 1 : 0
+
+  name   = "${var.identifier}-cluster-pg"
+  family = local.pg_family
+
+  parameter {
+    name  = "log_statement"
+    value = "all"
+  }
+
+  tags = merge(var.tags, {
+    Name = "${var.identifier}-cluster-parameter-group"
   })
 }

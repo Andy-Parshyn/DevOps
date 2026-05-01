@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: {{ .Values.git_repo_url }}
     targetRevision: main
-    path: lesson-8-9/charts/django-app
+    path: lesson-10/charts/django-app
   destination:
     server: https://kubernetes.default.svc
     namespace: {{ .Values.app_namespace }}

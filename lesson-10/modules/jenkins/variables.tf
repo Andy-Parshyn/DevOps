@@ -10,3 +10,9 @@ variable "chart_version" {
   default     = "5.8.3"
 }
 
+variable "jenkins_admin_password" {
+  description = "Пароль адміністратора Jenkins"
+  type        = string
+  sensitive   = true
+}
+
