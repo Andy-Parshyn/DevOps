@@ -8,6 +8,7 @@
 - [`lesson-5_terraform/`](./lesson-5_terraform) — Terraform інфраструктура в AWS (S3 backend, DynamoDB lock, VPC, ECR)
 - [`lesson-7/`](./lesson-7) — Terraform + AWS EKS + Helm chart для деплою Django в Kubernetes
 - [`lesson-8-9/`](./lesson-8-9) — CI/CD pipeline: Jenkins + Argo CD + Helm + Terraform на EKS
+- [`lesson-10/`](./lesson-10) — Універсальний RDS модуль: Aurora Cluster або standalone RDS instance
 
 ---
 
@@ -210,3 +211,34 @@ Argo CD стежить за Git → Виявляє новий tag → Автом
 ### Документація
 
 Детальна інструкція для Lesson 8-9: [`lesson-8-9/README.md`](./lesson-8-9/README.md)
+
+---
+
+## Lesson 10 — Універсальний RDS модуль (Aurora / Standalone)
+
+Terraform-модуль для створення бази даних у AWS з підтримкою двох режимів роботи через змінну `use_aurora`.
+
+### Що додано у Lesson 10
+
+- модуль `rds` — універсальний модуль для RDS та Aurora PostgreSQL
+- автоматичне створення DB Subnet Group, Security Group, Parameter Group
+- умовне створення ресурсів через `count` на основі `use_aurora`
+- параметри БД (max_connections, log_statement, work_mem) через Parameter Group
+
+### Режими роботи
+
+| `use_aurora` | Що створюється |
+|---|---|
+| `false` (default) | `aws_db_instance` — одна standalone RDS instance |
+| `true` | `aws_rds_cluster` + `aws_rds_cluster_instance` (writer) — Aurora Cluster |
+
+### Основні компоненти
+
+- `modules/rds/shared.tf` — DB Subnet Group, Security Group, Parameter Group (спільні для обох режимів)
+- `modules/rds/rds.tf` — standalone RDS instance (`count = use_aurora ? 0 : 1`)
+- `modules/rds/aurora.tf` — Aurora Cluster + writer (`count = use_aurora ? 1 : 0`)
+- Усі попередні модулі: S3, VPC, ECR, EKS, Jenkins, Argo CD
+
+### Документація
+
+Детальна інструкція для Lesson 10: [`lesson-10/README.md`](./lesson-10/README.md)

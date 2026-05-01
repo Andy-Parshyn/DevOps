@@ -1,0 +1,78 @@
+pipeline {
+    agent {
+        kubernetes {
+            label 'kaniko'
+        }
+    }
+
+    parameters {
+        string(name: 'AWS_ACCOUNT_ID', defaultValue: '', trim: true, description: 'AWS account ID used for the ECR registry')
+    }
+
+    environment {
+        AWS_REGION      = 'eu-central-1'
+        ECR_REPO        = "${params.AWS_ACCOUNT_ID}.dkr.ecr.eu-central-1.amazonaws.com/lesson-10-django"
+        IMAGE_TAG       = "${env.BUILD_NUMBER}"
+        GIT_REPO        = 'https://github.com/Andy-Parshyn/DevOps.git'
+        DOCKERFILE_PATH = 'lesson-4_DockerProject/web/Dockerfile'
+        CONTEXT_PATH    = 'lesson-4_DockerProject/web'
+        VALUES_FILE     = 'lesson-10/charts/django-app/values.yaml'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                container('git') {
+                    checkout scm
+                }
+            }
+        }
+
+        stage('Build & Push Image') {
+            steps {
+                container('kaniko') {
+                    sh """
+                        /kaniko/executor \
+                            --context=\${WORKSPACE}/${CONTEXT_PATH} \
+                            --dockerfile=\${WORKSPACE}/${DOCKERFILE_PATH} \
+                            --destination=${ECR_REPO}:${IMAGE_TAG} \
+                            --destination=${ECR_REPO}:latest
+                    """
+                }
+            }
+        }
+
+        stage('Update Helm Values') {
+            steps {
+                container('git') {
+                    sh """
+                        cd \${WORKSPACE}
+                        sed -i "s|tag:.*|tag: \\"${IMAGE_TAG}\\"|" ${VALUES_FILE}
+                        cat ${VALUES_FILE}
+                    """
+                }
+            }
+        }
+
+        stage('Push to Git') {
+            steps {
+                container('git') {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'github-credentials',
+                        usernameVariable: 'GIT_USERNAME',
+                        passwordVariable: 'GIT_TOKEN'
+                    )]) {
+                        sh """
+                            cd \${WORKSPACE}
+                            git config user.email "jenkins@ci.local"
+                            git config user.name "Jenkins CI"
+                            git add ${VALUES_FILE}
+                            git commit -m "ci: update image tag to ${IMAGE_TAG} [ci skip]"
+                            git push https://\${GIT_USERNAME}:\${GIT_TOKEN}@github.com/Andy-Parshyn/DevOps.git HEAD:main
+                        """
+                    }
+                }
+            }
+        }
+    }
+}

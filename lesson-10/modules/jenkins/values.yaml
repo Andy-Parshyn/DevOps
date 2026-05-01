@@ -1,0 +1,71 @@
+# ==========================================
+# Jenkins Controller (Master)
+# ==========================================
+controller:
+  # Ресурси для Jenkins master поду
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+
+  # Service type — для навчання NodePort, для production LoadBalancer
+  serviceType: LoadBalancer
+
+  # Встановити плагіни при старті
+  installPlugins:
+    - kubernetes:4336.v14d4e0da_5fb_8
+    - workflow-aggregator:608.v67378e9b_3c42
+    - git:5.7.0
+    - configuration-as-code:1909.vb_b_f59a_27d013
+
+  # Jenkins Configuration as Code (JCasC)
+  # Це декларативна конфігурація Jenkins — замість клікання в UI
+  JCasC:
+    configScripts:
+      cloud-config: |
+        jenkins:
+          clouds:
+            - kubernetes:
+                name: "kubernetes"
+                serverUrl: ""
+                namespace: "${namespace}"
+                jenkinsUrl: "http://jenkins.${namespace}.svc.cluster.local:8080"
+                # Шаблон agent-поду з Kaniko
+                templates:
+                  - name: "kaniko"
+                    label: "kaniko"
+                    serviceAccount: "jenkins-agent"
+                    containers:
+                      # Kaniko — будує Docker образи без Docker daemon
+                      - name: "kaniko"
+                        image: "gcr.io/kaniko-project/executor:v1.23.2-debug"
+                        command: "/busybox/cat"
+                        ttyEnabled: true
+                        resourceRequestCpu: "500m"
+                        resourceRequestMemory: "1Gi"
+                        resourceLimitCpu: "1000m"
+                        resourceLimitMemory: "2Gi"
+                      # Git — для клонування репо
+                      - name: "git"
+                        image: "alpine/git:v2.47.2"
+                        command: "/bin/sh"
+                        args:
+                          - "-c"
+                          - "cat"
+                        ttyEnabled: true
+
+# ==========================================
+# Persistence — зберігає Jenkins конфіг між рестартами
+# ==========================================
+persistence:
+  enabled: true
+  size: "10Gi"
+
+# ==========================================
+# RBAC — Jenkins може створювати поди (agents)
+# ==========================================
+rbac:
+  create: true
